@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Angle Sum of Quadrilateral — Ganita Prakash Grade 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0ede8;--border:#d8d4cc;
+  --text:#1a1814;--text2:#5a5650;--text3:#9a958e;
+  --blue:#2c5f9e;--red:#c0392b;--green:#1a7a4a;--orange:#e08020;
+  --font:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',ui-monospace,monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+.page{max-width:840px;margin:0 auto;padding:28px 20px}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.title{font-size:22px;font-weight:700;margin-bottom:5px}
+.subtitle{font-size:14px;color:var(--text2);margin-bottom:22px;max-width:560px;line-height:1.5}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px}
+.card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:12px}
+canvas{display:block;width:100%;border-radius:10px;border:1.5px solid var(--border);background:#fafaf8;cursor:crosshair;touch-action:none;margin-bottom:14px}
+.sum-banner{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.angle-chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.a-chip{padding:7px 12px;border-radius:8px;border:1.5px solid;font-family:var(--mono);font-size:15px;font-weight:700;min-width:72px;text-align:center;transition:all .15s}
+.sum-chip{padding:7px 14px;border-radius:8px;font-size:18px;font-weight:700;font-family:var(--mono);border:2px solid}
+.sum-chip.ok{background:#f0fdf4;border-color:#86efac;color:var(--green)}
+.diag-toggle{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.diag-toggle input{width:20px;height:20px;accent-color:var(--blue);cursor:pointer}
+.diag-toggle label{font-size:13.5px;font-weight:500;color:var(--text2);cursor:pointer}
+.presets-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.preset-lbl{font-size:12px;color:var(--text3);font-weight:500}
+.psc{padding:5px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-weight:500;background:var(--surface);color:var(--text2);cursor:pointer;font-family:var(--font)}
+.psc:hover{border-color:var(--blue);color:var(--blue)}
+.proof-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--text2);line-height:1.7}
+.proof-box strong{color:var(--text)}
+.proof-box .eq{font-family:var(--mono);font-size:13px;display:block;margin:2px 0}
+.hint{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
+.insight{background:#fff8f0;border:1.5px solid #f0d8c0;border-radius:10px;padding:13px 18px;font-size:13.5px;color:#6b4400;line-height:1.65;margin-top:14px}
+.insight strong{color:#a05000}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="lbl">Chapter 4 · Quadrilaterals</div>
+  <div class="title">Angle Sum = 360°</div>
+  <div class="subtitle">Drag the four vertices anywhere. The four angles always add to exactly 360°. Show the diagonal to see why — two triangles, each 180°.</div>
+
+  <div class="card">
+    <div class="presets-row">
+      <span class="preset-lbl">Try:</span>
+      <button class="psc" onclick="setPreset('rect')">Rectangle</button>
+      <button class="psc" onclick="setPreset('para')">Parallelogram</button>
+      <button class="psc" onclick="setPreset('trap')">Trapezium</button>
+      <button class="psc" onclick="setPreset('kite')">Kite</button>
+      <button class="psc" onclick="setPreset('random')">Random</button>
+    </div>
+
+    <div class="diag-toggle">
+      <input type="checkbox" id="showDiag" onchange="redraw()">
+      <label for="showDiag">Show diagonal (splits into two triangles of 180° each)</label>
+    </div>
+
+    <canvas id="cvs" height="320"></canvas>
+
+    <div class="sum-banner">
+      <div class="angle-chips" id="angleChips"></div>
+      <div class="sum-chip ok" id="sumChip">= 360°</div>
+    </div>
+
+    <div class="proof-box">
+      <strong>Why is the sum always 360°?</strong> Draw diagonal AC. It splits the quadrilateral into two triangles: △ABC and △ACD.
+      <span class="eq">△ABC: ∠A₁ + ∠B + ∠C₁ = 180°</span>
+      <span class="eq">△ACD: ∠A₂ + ∠C₂ + ∠D = 180°</span>
+      <span class="eq">Add: (∠A₁+∠A₂) + ∠B + (∠C₁+∠C₂) + ∠D = 360°</span>
+      That is: ∠A + ∠B + ∠C + ∠D = 360°, for any quadrilateral.
+    </div>
+
+    <div class="hint">Drag any vertex to reshape the quadrilateral</div>
+  </div>
+
+  <div class="insight">
+    <strong>Why can't a quadrilateral have three right angles and one non-right angle?</strong> If three angles are 90°, their sum is 270°. The fourth must be 360° − 270° = 90° as well. So the fourth angle is forced to be 90° too — making it a rectangle.
+  </div>
+</div>
+
+<script>
+const COLORS=['#2c5f9e','#c0392b','#1a7a4a','#e08020'];
+const LABELS=['A','B','C','D'];
+
+let pts=[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
+let dragging=-1;
+
+function setPreset(name){
+  const cvs=document.getElementById('cvs');
+  const W=cvs.parentElement.clientWidth, H=320;
+  const cx=W/2, cy=H/2;
+  const presets={
+    rect:[{x:cx-120,y:cy-70},{x:cx+120,y:cy-70},{x:cx+120,y:cy+70},{x:cx-120,y:cy+70}],
+    para:[{x:cx-100,y:cy-70},{x:cx+120,y:cy-70},{x:cx+100,y:cy+70},{x:cx-120,y:cy+70}],
+    trap:[{x:cx-60,y:cy-70},{x:cx+60,y:cy-70},{x:cx+130,y:cy+70},{x:cx-130,y:cy+70}],
+    kite:[{x:cx,y:cy-100},{x:cx+90,y:cy+20},{x:cx,y:cy+90},{x:cx-90,y:cy+20}],
+    random:[
+      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
+      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
+      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
+      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
+    ],
+  };
+  pts=presets[name].map(p=>({...p}));
+  redraw();
+}
+window.setPreset=setPreset;
+
+function angle(p,vertex,q){
+  const ax=p.x-vertex.x, ay=p.y-vertex.y;
+  const bx=q.x-vertex.x, by=q.y-vertex.y;
+  const dot=ax*bx+ay*by;
+  const cross=ax*by-ay*bx;
+  return Math.abs(Math.atan2(Math.abs(cross),dot)*180/Math.PI);
+}
+
+function redraw(){
+  const cvs=document.getElementById('cvs');
+  const PR=window.devicePixelRatio||1;
+  const W=cvs.parentElement.clientWidth;
+  cvs.width=W*PR; cvs.height=320*PR;
+  cvs.style.width=W+'px'; cvs.style.height='320px';
+  const ctx=cvs.getContext('2d');
+  ctx.scale(PR,PR);
+  ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,W,320);
+
+  const [A,B,C,D]=pts;
+
+  // Show diagonal
+  if(document.getElementById('showDiag').checked){
+    ctx.beginPath();
+    ctx.moveTo(A.x,A.y); ctx.lineTo(C.x,C.y);
+    ctx.strokeStyle='#9a958e'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+    ctx.stroke(); ctx.setLineDash([]);
+    // Fill triangles lightly
+    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.closePath();
+    ctx.fillStyle='rgba(44,95,158,.07)'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(D.x,D.y); ctx.lineTo(C.x,C.y); ctx.closePath();
+    ctx.fillStyle='rgba(192,57,43,.07)'; ctx.fill();
+    // Triangle labels
+    ctx.font='bold 12px DM Sans'; ctx.textAlign='center'; ctx.fillStyle='#2c5f9e';
+    const t1cx=(A.x+B.x+C.x)/3, t1cy=(A.y+B.y+C.y)/3;
+    const t2cx=(A.x+D.x+C.x)/3, t2cy=(A.y+D.y+C.y)/3;
+    ctx.fillText('△ABC (180°)', t1cx, t1cy);
+    ctx.fillStyle='#c0392b';
+    ctx.fillText('△ACD (180°)', t2cx, t2cy);
+  }
+
+  // Draw quad
+  ctx.beginPath();
+  ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.lineTo(D.x,D.y);
+  ctx.closePath();
+  ctx.fillStyle='rgba(26,20,16,.04)'; ctx.fill();
+  ctx.strokeStyle='#1a1814'; ctx.lineWidth=2; ctx.stroke();
+
+  // Angle arcs and values
+  const angles=[];
+  [A,B,C,D].forEach((v,i)=>{
+    const prev=pts[(i+3)%4], next=pts[(i+1)%4];
+    const a=angle(prev,v,next);
+    angles.push(a);
+    const c=COLORS[i];
+    // Arc
+    const ang1=Math.atan2(prev.y-v.y,prev.x-v.x);
+    const ang2=Math.atan2(next.y-v.y,next.x-v.x);
+    ctx.beginPath(); ctx.strokeStyle=c; ctx.lineWidth=2;
+    ctx.arc(v.x,v.y,22, Math.min(ang1,ang2), Math.max(ang1,ang2));
+    ctx.stroke();
+    // Angle text
+    const midA=(ang1+ang2)/2;
+    ctx.font='bold 11px DM Mono'; ctx.fillStyle=c; ctx.textAlign='center';
+    ctx.fillText(Math.round(a)+'°', v.x+38*Math.cos(midA), v.y+38*Math.sin(midA));
+    // Vertex label
+    ctx.font='bold 14px DM Sans'; ctx.fillStyle='#1a1814';
+    const dx=v.x>W/2?14:-14, dy=v.y>160?16:-14;
+    ctx.fillText(LABELS[i], v.x+dx, v.y+dy);
+    // Dot
+    ctx.beginPath(); ctx.fillStyle=c; ctx.arc(v.x,v.y,7,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.fillStyle='#fff'; ctx.arc(v.x,v.y,4,0,Math.PI*2); ctx.fill();
+  });
+
+  // Chips
+  const chips=document.getElementById('angleChips');
+  chips.innerHTML='';
+  const sum=Math.round(angles.reduce((s,a)=>s+a,0));
+  angles.forEach((a,i)=>{
+    const chip=document.createElement('div');
+    chip.className='a-chip';
+    chip.style.borderColor=COLORS[i]+'88';
+    chip.style.background=COLORS[i]+'0f';
+    chip.style.color=COLORS[i];
+    chip.textContent=`∠${LABELS[i]} = ${Math.round(a)}°`;
+    chips.appendChild(chip);
+  });
+  const sc=document.getElementById('sumChip');
+  sc.textContent=`= ${sum}°`;
+}
+
+// Drag logic
+const cvs=document.getElementById('cvs');
+function getPos(e){
+  const r=cvs.getBoundingClientRect();
+  const PR=window.devicePixelRatio||1;
+  const s=cvs.width/(cvs.clientWidth*PR); // always 1 for our setup
+  if(e.touches) return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top};
+  return {x:e.clientX-r.left, y:e.clientY-r.top};
+}
+cvs.addEventListener('mousedown',e=>{
+  const p=getPos(e);
+  dragging=pts.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<18);
+});
+cvs.addEventListener('mousemove',e=>{
+  if(dragging<0) return;
+  const p=getPos(e);
+  pts[dragging]={x:p.x,y:p.y};
+  redraw();
+});
+cvs.addEventListener('mouseup',()=>dragging=-1);
+cvs.addEventListener('touchstart',e=>{const p=getPos(e);dragging=pts.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<24);e.preventDefault();},{passive:false});
+cvs.addEventListener('touchmove',e=>{if(dragging<0)return;const p=getPos(e);pts[dragging]={x:p.x,y:p.y};redraw();e.preventDefault();},{passive:false});
+cvs.addEventListener('touchend',()=>dragging=-1);
+
+setPreset('rect');
+</script>
+</body>
+</html>
