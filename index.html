@@ -5,228 +5,442 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Angle Sum of Quadrilateral — Ganita Prakash Grade 8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f4f0;--surface:#fff;--surface2:#f0ede8;--border:#d8d4cc;
-  --text:#1a1814;--text2:#5a5650;--text3:#9a958e;
-  --blue:#2c5f9e;--red:#c0392b;--green:#1a7a4a;--orange:#e08020;
-  --font:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',ui-monospace,monospace;
+  --paper:#faf8f4; --paper2:#f3f0ea; --paper3:#e8e3d8;
+  --ink:#1c1a16;   --ink2:#4a4640;   --ink3:#8a8580;
+  --rule:#d4cfc5;
+  --teal:#1d6a72;  --teal2:#2a8a94;  --teal-bg:#e8f4f5;
+  --rust:#b84a2a;  --rust-bg:#fdf0ec;
+  --gold:#c08030;  --gold-bg:#fdf5e8;
+  --sage:#3a6a48;  --sage-bg:#eaf2ec;
+  --violet:#6a4a90;
+  --font:'DM Sans',sans-serif;
+  --serif:'Lora',Georgia,serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+  --shadow:0 2px 12px rgba(28,26,22,.08);
+
+  /* Four vertex colours — warm, distinct on cream background */
+  --cA:#1d6a72; /* teal   */
+  --cB:#b84a2a; /* rust   */
+  --cC:#6a4a90; /* violet */
+  --cD:#3a6a48; /* sage   */
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
-.page{max-width:840px;margin:0 auto;padding:28px 20px}
-.lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
-.title{font-size:22px;font-weight:700;margin-bottom:5px}
-.subtitle{font-size:14px;color:var(--text2);margin-bottom:22px;max-width:560px;line-height:1.5}
-.card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px}
-.card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:12px}
-canvas{display:block;width:100%;border-radius:10px;border:1.5px solid var(--border);background:#fafaf8;cursor:crosshair;touch-action:none;margin-bottom:14px}
-.sum-banner{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-.angle-chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
-.a-chip{padding:7px 12px;border-radius:8px;border:1.5px solid;font-family:var(--mono);font-size:15px;font-weight:700;min-width:72px;text-align:center;transition:all .15s}
-.sum-chip{padding:7px 14px;border-radius:8px;font-size:18px;font-weight:700;font-family:var(--mono);border:2px solid}
-.sum-chip.ok{background:#f0fdf4;border-color:#86efac;color:var(--green)}
-.diag-toggle{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.diag-toggle input{width:20px;height:20px;accent-color:var(--blue);cursor:pointer}
-.diag-toggle label{font-size:13.5px;font-weight:500;color:var(--text2);cursor:pointer}
-.presets-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.preset-lbl{font-size:12px;color:var(--text3);font-weight:500}
-.psc{padding:5px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-weight:500;background:var(--surface);color:var(--text2);cursor:pointer;font-family:var(--font)}
-.psc:hover{border-color:var(--blue);color:var(--blue)}
-.proof-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--text2);line-height:1.7}
-.proof-box strong{color:var(--text)}
-.proof-box .eq{font-family:var(--mono);font-size:13px;display:block;margin:2px 0}
-.hint{font-size:12px;color:var(--text3);text-align:center;margin-top:8px}
-.insight{background:#fff8f0;border:1.5px solid #f0d8c0;border-radius:10px;padding:13px 18px;font-size:13.5px;color:#6b4400;line-height:1.65;margin-top:14px}
-.insight strong{color:#a05000}
+body{
+  font-family:var(--font);background:var(--paper);color:var(--ink);
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+  padding:28px 20px 60px;line-height:1.6;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(192,128,48,.04) 0,transparent 50%),
+    radial-gradient(circle at 80% 70%,rgba(29,106,114,.04) 0,transparent 50%);
+}
+.app{max-width:860px;margin:0 auto}
+
+/* ── HEADER ── */
+.header{margin-bottom:24px;padding-bottom:18px;border-bottom:1.5px solid var(--rule)}
+.chapter-badge{display:inline-flex;align-items:center;gap:8px;background:var(--paper2);border:1.5px solid var(--rule);border-radius:20px;padding:4px 14px 4px 10px;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.badge-num{width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;justify-content:center}
+h1{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.3px;line-height:1.2;margin-bottom:5px}
+.header-sub{font-size:14px;color:var(--ink2);max-width:560px;line-height:1.55}
+
+/* ── CARD ── */
+.card{background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+
+/* ── CONCEPT ── */
+.concept{background:var(--gold-bg);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:11px 16px;margin-bottom:20px;font-family:var(--serif);font-style:italic;font-size:14px;color:#4a3010;line-height:1.65}
+.concept strong{font-style:normal;font-weight:700;color:#3a2008}
+
+/* ── PRESET ROW ── */
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.preset-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);white-space:nowrap}
+.psc{padding:5px 13px;border:1.5px solid var(--rule);border-radius:20px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;background:var(--paper);transition:all .12s}
+.psc:hover{border-color:var(--teal);color:var(--teal)}
+.psc.active-preset{background:var(--teal);border-color:var(--teal);color:#fff}
+
+/* ── DIAGONAL TOGGLE ── */
+.diag-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:9px 13px;background:#fff;border:1.5px solid var(--rule);border-radius:9px;width:fit-content}
+.diag-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--teal);cursor:pointer;flex-shrink:0}
+.diag-row label{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;line-height:1.3}
+
+/* ── CANVAS ── */
+.canvas-wrap{
+  position:relative;background:var(--paper2);border:1.5px solid var(--rule);
+  border-radius:12px;overflow:hidden;margin-bottom:16px;cursor:crosshair;
+  touch-action:none
+}
+#cvs{display:block;width:100%}
+.canvas-hint{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--ink3);background:rgba(250,248,244,.88);
+  padding:4px 12px;border-radius:20px;border:1px solid var(--rule);pointer-events:none
+}
+
+/* ── ANGLE DISPLAY ── */
+.angle-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px
+}
+@media(max-width:500px){.angle-row{grid-template-columns:repeat(2,1fr)}}
+
+.angle-card{
+  background:#fff;border:2px solid var(--rule);border-radius:10px;
+  padding:10px 10px 8px;text-align:center;transition:all .2s
+}
+.ac-letter{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.ac-angle{font-family:var(--mono);font-size:22px;font-weight:800;line-height:1;margin-bottom:2px}
+.ac-sub{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--ink3)}
+
+/* ── SUM BANNER ── */
+.sum-banner{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 20px;border-radius:11px;border:2px solid;
+  margin-bottom:16px;flex-wrap:wrap;text-align:center;
+  transition:all .3s
+}
+.sum-banner.ok{background:var(--sage-bg);border-color:#8abcaa}
+.sum-eq{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink2)}
+.sum-val{font-family:var(--mono);font-size:32px;font-weight:800;color:var(--sage)}
+.sum-label{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--sage)}
+
+/* ── PROOF BOX ── */
+.proof-box{
+  background:#fff;border:1.5px solid var(--rule);border-radius:11px;
+  padding:14px 18px;font-size:13px;color:var(--ink2);line-height:1.7
+}
+.proof-box strong{color:var(--ink);font-weight:700}
+.proof-step{
+  font-family:var(--mono);font-size:12.5px;display:block;
+  margin:3px 0;padding:4px 10px;background:var(--paper2);
+  border-radius:6px;color:var(--ink2)
+}
+.proof-step.hi{background:var(--sage-bg);color:var(--sage);font-weight:700}
+
+/* ── INSIGHT ── */
+.insight{background:var(--gold-bg);border:1px solid #e0c080;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 15px;font-size:13px;color:#6b4400;line-height:1.65;margin-top:4px}
+.insight strong{color:#4a2e00}
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="lbl">Chapter 4 · Quadrilaterals</div>
-  <div class="title">Angle Sum = 360°</div>
-  <div class="subtitle">Drag the four vertices anywhere. The four angles always add to exactly 360°. Show the diagonal to see why — two triangles, each 180°.</div>
+<div class="app">
+  <div class="header">
+    <div class="chapter-badge"><div class="badge-num">4</div>Chapter 4 · Quadrilaterals</div>
+    <h1>Angle Sum = 360°</h1>
+    <p class="header-sub">Drag any vertex to reshape the quadrilateral. The four angles always add to exactly 360° — no matter what shape you make.</p>
+  </div>
 
   <div class="card">
-    <div class="presets-row">
+    <div class="concept">
+      <strong>Try every shape:</strong> rectangle, kite, trapezium, a wild irregular shape — the angles always sum to exactly 360°. Show the diagonal to see <em>why</em>: it splits the quadrilateral into two triangles, each summing to 180°.
+    </div>
+
+    <div class="preset-row">
       <span class="preset-lbl">Try:</span>
-      <button class="psc" onclick="setPreset('rect')">Rectangle</button>
-      <button class="psc" onclick="setPreset('para')">Parallelogram</button>
-      <button class="psc" onclick="setPreset('trap')">Trapezium</button>
-      <button class="psc" onclick="setPreset('kite')">Kite</button>
-      <button class="psc" onclick="setPreset('random')">Random</button>
+      <button class="psc active-preset" id="pre-rect"   onclick="setPreset('rect')">Rectangle</button>
+      <button class="psc" id="pre-para"   onclick="setPreset('para')">Parallelogram</button>
+      <button class="psc" id="pre-trap"   onclick="setPreset('trap')">Trapezium</button>
+      <button class="psc" id="pre-kite"   onclick="setPreset('kite')">Kite</button>
+      <button class="psc" id="pre-random" onclick="setPreset('random')">Random</button>
     </div>
 
-    <div class="diag-toggle">
-      <input type="checkbox" id="showDiag" onchange="redraw()">
-      <label for="showDiag">Show diagonal (splits into two triangles of 180° each)</label>
+    <div class="diag-row">
+      <input type="checkbox" id="showDiag">
+      <label for="showDiag">Show diagonal — splits into △ABC (180°) and △ACD (180°)</label>
     </div>
 
-    <canvas id="cvs" height="320"></canvas>
-
-    <div class="sum-banner">
-      <div class="angle-chips" id="angleChips"></div>
-      <div class="sum-chip ok" id="sumChip">= 360°</div>
+    <div class="canvas-wrap">
+      <canvas id="cvs" height="340"></canvas>
+      <div class="canvas-hint">Drag any coloured vertex to reshape</div>
     </div>
 
+    <!-- Angle cards -->
+    <div class="angle-row" id="angle-row">
+      <div class="angle-card" id="card-A">
+        <div class="ac-letter" style="color:var(--cA)">Vertex A</div>
+        <div class="ac-angle" style="color:var(--cA)" id="ang-A">90°</div>
+        <div class="ac-sub">∠A</div>
+      </div>
+      <div class="angle-card" id="card-B">
+        <div class="ac-letter" style="color:var(--cB)">Vertex B</div>
+        <div class="ac-angle" style="color:var(--cB)" id="ang-B">90°</div>
+        <div class="ac-sub">∠B</div>
+      </div>
+      <div class="angle-card" id="card-C">
+        <div class="ac-letter" style="color:var(--cC)">Vertex C</div>
+        <div class="ac-angle" style="color:var(--cC)" id="ang-C">90°</div>
+        <div class="ac-sub">∠C</div>
+      </div>
+      <div class="angle-card" id="card-D">
+        <div class="ac-letter" style="color:var(--cD)">Vertex D</div>
+        <div class="ac-angle" style="color:var(--cD)" id="ang-D">90°</div>
+        <div class="ac-sub">∠D</div>
+      </div>
+    </div>
+
+    <!-- Sum banner -->
+    <div class="sum-banner ok" id="sum-banner">
+      <span class="sum-eq">∠A + ∠B + ∠C + ∠D =</span>
+      <span class="sum-val" id="sum-val">360°</span>
+      <span class="sum-label">always, for any quadrilateral</span>
+    </div>
+
+    <!-- Proof box -->
     <div class="proof-box">
-      <strong>Why is the sum always 360°?</strong> Draw diagonal AC. It splits the quadrilateral into two triangles: △ABC and △ACD.
-      <span class="eq">△ABC: ∠A₁ + ∠B + ∠C₁ = 180°</span>
-      <span class="eq">△ACD: ∠A₂ + ∠C₂ + ∠D = 180°</span>
-      <span class="eq">Add: (∠A₁+∠A₂) + ∠B + (∠C₁+∠C₂) + ∠D = 360°</span>
-      That is: ∠A + ∠B + ∠C + ∠D = 360°, for any quadrilateral.
+      <strong>Why is the sum always 360°?</strong> Draw diagonal AC — it splits the quadrilateral into two triangles.
+      <span class="proof-step">△ABC: ∠A₁ + ∠B + ∠C₁ = 180°</span>
+      <span class="proof-step">△ACD: ∠A₂ + ∠C₂ + ∠D = 180°</span>
+      <span class="proof-step hi">Adding both: (∠A₁+∠A₂) + ∠B + (∠C₁+∠C₂) + ∠D = 360°</span>
+      That is: ∠A + ∠B + ∠C + ∠D = <strong>360°</strong> — for any quadrilateral, always.
     </div>
-
-    <div class="hint">Drag any vertex to reshape the quadrilateral</div>
   </div>
 
   <div class="insight">
-    <strong>Why can't a quadrilateral have three right angles and one non-right angle?</strong> If three angles are 90°, their sum is 270°. The fourth must be 360° − 270° = 90° as well. So the fourth angle is forced to be 90° too — making it a rectangle.
+    <strong>A nice consequence:</strong> If three angles of a quadrilateral are 90° each, their sum is 270°. The fourth angle must be 360° − 270° = 90°. So a quadrilateral with three right angles must have four right angles — it is a rectangle.
   </div>
 </div>
 
 <script>
-const COLORS=['#2c5f9e','#c0392b','#1a7a4a','#e08020'];
-const LABELS=['A','B','C','D'];
+// ══════════════════════════════════════════════
+// COLOURS — match CSS vars
+// ══════════════════════════════════════════════
+const COLORS = ['#1d6a72','#b84a2a','#6a4a90','#3a6a48'];
+const LABELS = ['A','B','C','D'];
+const PRESET_IDS = ['rect','para','trap','kite','random'];
 
-let pts=[{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
-let dragging=-1;
+let pts = [{x:0,y:0},{x:0,y:0},{x:0,y:0},{x:0,y:0}];
+let dragging = -1;
 
+// ══════════════════════════════════════════════
+// PRESETS
+// ══════════════════════════════════════════════
 function setPreset(name){
-  const cvs=document.getElementById('cvs');
-  const W=cvs.parentElement.clientWidth, H=320;
-  const cx=W/2, cy=H/2;
-  const presets={
-    rect:[{x:cx-120,y:cy-70},{x:cx+120,y:cy-70},{x:cx+120,y:cy+70},{x:cx-120,y:cy+70}],
-    para:[{x:cx-100,y:cy-70},{x:cx+120,y:cy-70},{x:cx+100,y:cy+70},{x:cx-120,y:cy+70}],
-    trap:[{x:cx-60,y:cy-70},{x:cx+60,y:cy-70},{x:cx+130,y:cy+70},{x:cx-130,y:cy+70}],
-    kite:[{x:cx,y:cy-100},{x:cx+90,y:cy+20},{x:cx,y:cy+90},{x:cx-90,y:cy+20}],
-    random:[
-      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
-      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
-      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
-      {x:cx+Math.round((Math.random()-.5)*200),y:cy+Math.round((Math.random()-.5)*150)},
-    ],
+  const W = document.getElementById('cvs').parentElement.clientWidth;
+  const H = 340;
+  const cx = W/2, cy = H/2;
+  const presets = {
+    rect  : [{x:cx-130,y:cy-80},{x:cx+130,y:cy-80},{x:cx+130,y:cy+80},{x:cx-130,y:cy+80}],
+    para  : [{x:cx-90, y:cy-80},{x:cx+130,y:cy-80},{x:cx+90, y:cy+80},{x:cx-130,y:cy+80}],
+    trap  : [{x:cx-70, y:cy-80},{x:cx+70, y:cy-80},{x:cx+140,y:cy+80},{x:cx-140,y:cy+80}],
+    kite  : [{x:cx,    y:cy-110},{x:cx+100,y:cy+10},{x:cx,y:cy+100},{x:cx-100,y:cy+10}],
+    random: Array.from({length:4},()=>({
+      x: cx + (Math.random()-.5)*260,
+      y: cy + (Math.random()-.5)*200,
+    })),
   };
-  pts=presets[name].map(p=>({...p}));
+  pts = presets[name].map(p=>({...p}));
+
+  // Update active pill
+  PRESET_IDS.forEach(id=>{
+    const el = document.getElementById('pre-'+id);
+    if(el) el.classList.toggle('active-preset', id===name);
+  });
+
   redraw();
 }
-window.setPreset=setPreset;
+window.setPreset = setPreset;
 
-function angle(p,vertex,q){
+// ══════════════════════════════════════════════
+// GEOMETRY
+// ══════════════════════════════════════════════
+function angleDeg(p, vertex, q){
   const ax=p.x-vertex.x, ay=p.y-vertex.y;
   const bx=q.x-vertex.x, by=q.y-vertex.y;
   const dot=ax*bx+ay*by;
   const cross=ax*by-ay*bx;
-  return Math.abs(Math.atan2(Math.abs(cross),dot)*180/Math.PI);
+  return Math.abs(Math.atan2(Math.abs(cross), dot) * 180/Math.PI);
 }
 
+// ══════════════════════════════════════════════
+// DRAW
+// ══════════════════════════════════════════════
 function redraw(){
-  const cvs=document.getElementById('cvs');
-  const PR=window.devicePixelRatio||1;
-  const W=cvs.parentElement.clientWidth;
-  cvs.width=W*PR; cvs.height=320*PR;
-  cvs.style.width=W+'px'; cvs.style.height='320px';
-  const ctx=cvs.getContext('2d');
-  ctx.scale(PR,PR);
-  ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,W,320);
+  const canvas = document.getElementById('cvs');
+  const wrap   = canvas.parentElement;
+  const W      = wrap.clientWidth;
+  const H      = 340;
+  const PR     = Math.min(window.devicePixelRatio||1, 2);
 
-  const [A,B,C,D]=pts;
+  canvas.width  = W * PR;
+  canvas.height = H * PR;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
 
-  // Show diagonal
-  if(document.getElementById('showDiag').checked){
+  const ctx = canvas.getContext('2d');
+  ctx.resetTransform();
+  ctx.scale(PR, PR);
+
+  // Warm paper background
+  ctx.fillStyle = '#f3f0ea';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid dots
+  ctx.fillStyle = 'rgba(180,170,158,.22)';
+  for(let gx=30; gx<W; gx+=30)
+    for(let gy=30; gy<H; gy+=30){
+      ctx.beginPath(); ctx.arc(gx,gy,1.1,0,Math.PI*2); ctx.fill();
+    }
+
+  const [A,B,C,D] = pts;
+  const showDiag  = document.getElementById('showDiag').checked;
+
+  // ── Diagonal triangles ──
+  if(showDiag){
+    // Triangle ABC fill
+    ctx.beginPath();
+    ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(29,106,114,.10)'; ctx.fill();
+
+    // Triangle ACD fill
+    ctx.beginPath();
+    ctx.moveTo(A.x,A.y); ctx.lineTo(D.x,D.y); ctx.lineTo(C.x,C.y);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(184,74,42,.08)'; ctx.fill();
+
+    // Diagonal line
     ctx.beginPath();
     ctx.moveTo(A.x,A.y); ctx.lineTo(C.x,C.y);
-    ctx.strokeStyle='#9a958e'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
-    ctx.stroke(); ctx.setLineDash([]);
-    // Fill triangles lightly
-    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.closePath();
-    ctx.fillStyle='rgba(44,95,158,.07)'; ctx.fill();
-    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(D.x,D.y); ctx.lineTo(C.x,C.y); ctx.closePath();
-    ctx.fillStyle='rgba(192,57,43,.07)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(100,90,80,.45)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
     // Triangle labels
-    ctx.font='bold 12px DM Sans'; ctx.textAlign='center'; ctx.fillStyle='#2c5f9e';
-    const t1cx=(A.x+B.x+C.x)/3, t1cy=(A.y+B.y+C.y)/3;
-    const t2cx=(A.x+D.x+C.x)/3, t2cy=(A.y+D.y+C.y)/3;
-    ctx.fillText('△ABC (180°)', t1cx, t1cy);
-    ctx.fillStyle='#c0392b';
-    ctx.fillText('△ACD (180°)', t2cx, t2cy);
+    function triCentroid(p1,p2,p3){ return {x:(p1.x+p2.x+p3.x)/3,y:(p1.y+p2.y+p3.y)/3}; }
+    const t1 = triCentroid(A,B,C);
+    const t2 = triCentroid(A,D,C);
+
+    ctx.font = 'bold 11px DM Sans, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(29,106,114,.75)';
+    ctx.fillText('△ABC', t1.x, t1.y);
+    ctx.fillText('180°', t1.x, t1.y+14);
+    ctx.fillStyle = 'rgba(184,74,42,.75)';
+    ctx.fillText('△ACD', t2.x, t2.y);
+    ctx.fillText('180°', t2.x, t2.y+14);
   }
 
-  // Draw quad
+  // ── Quadrilateral fill + outline ──
   ctx.beginPath();
-  ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.lineTo(D.x,D.y);
+  ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y);
+  ctx.lineTo(C.x,C.y); ctx.lineTo(D.x,D.y);
   ctx.closePath();
-  ctx.fillStyle='rgba(26,20,16,.04)'; ctx.fill();
-  ctx.strokeStyle='#1a1814'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle = 'rgba(28,26,22,.04)';
+  ctx.fill();
+  ctx.strokeStyle = '#1c1a16';
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
-  // Angle arcs and values
-  const angles=[];
-  [A,B,C,D].forEach((v,i)=>{
-    const prev=pts[(i+3)%4], next=pts[(i+1)%4];
-    const a=angle(prev,v,next);
+  // ── Angles ──
+  const angles = [];
+  pts.forEach((v,i)=>{
+    const prev = pts[(i+3)%4];
+    const next = pts[(i+1)%4];
+    const a    = angleDeg(prev, v, next);
     angles.push(a);
-    const c=COLORS[i];
-    // Arc
-    const ang1=Math.atan2(prev.y-v.y,prev.x-v.x);
-    const ang2=Math.atan2(next.y-v.y,next.x-v.x);
-    ctx.beginPath(); ctx.strokeStyle=c; ctx.lineWidth=2;
-    ctx.arc(v.x,v.y,22, Math.min(ang1,ang2), Math.max(ang1,ang2));
+
+    const col  = COLORS[i];
+    const ang1 = Math.atan2(prev.y-v.y, prev.x-v.x);
+    const ang2 = Math.atan2(next.y-v.y, next.x-v.x);
+
+    // Angle arc
+    ctx.beginPath();
+    ctx.strokeStyle = col;
+    ctx.lineWidth   = 2.5;
+    ctx.arc(v.x, v.y, 24, Math.min(ang1,ang2), Math.max(ang1,ang2));
     ctx.stroke();
-    // Angle text
-    const midA=(ang1+ang2)/2;
-    ctx.font='bold 11px DM Mono'; ctx.fillStyle=c; ctx.textAlign='center';
-    ctx.fillText(Math.round(a)+'°', v.x+38*Math.cos(midA), v.y+38*Math.sin(midA));
-    // Vertex label
-    ctx.font='bold 14px DM Sans'; ctx.fillStyle='#1a1814';
-    const dx=v.x>W/2?14:-14, dy=v.y>160?16:-14;
-    ctx.fillText(LABELS[i], v.x+dx, v.y+dy);
-    // Dot
-    ctx.beginPath(); ctx.fillStyle=c; ctx.arc(v.x,v.y,7,0,Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.fillStyle='#fff'; ctx.arc(v.x,v.y,4,0,Math.PI*2); ctx.fill();
+
+    // Angle value label (just outside arc)
+    const midA = (ang1+ang2)/2;
+    const R_label = 42;
+    ctx.font      = `bold 11.5px DM Mono, monospace`;
+    ctx.fillStyle = col;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round(a)+'°', v.x+R_label*Math.cos(midA), v.y+R_label*Math.sin(midA));
+
+    // Vertex dot (outer ring in colour, white fill)
+    const R_dot = 9;
+    ctx.beginPath(); ctx.arc(v.x,v.y,R_dot,0,Math.PI*2);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.beginPath(); ctx.arc(v.x,v.y,5,0,Math.PI*2);
+    ctx.fillStyle = '#fff'; ctx.fill();
+
+    // Vertex letter
+    // Position label away from centre
+    const offScale = 20;
+    const cx_ = (A.x+B.x+C.x+D.x)/4;
+    const cy_ = (A.y+B.y+C.y+D.y)/4;
+    const lx  = v.x + (v.x-cx_)/Math.hypot(v.x-cx_,v.y-cy_)*offScale;
+    const ly  = v.y + (v.y-cy_)/Math.hypot(v.x-cx_,v.y-cy_)*offScale;
+    ctx.font      = 'bold 14px DM Sans, sans-serif';
+    ctx.fillStyle = col;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(LABELS[i], lx, ly);
   });
 
-  // Chips
-  const chips=document.getElementById('angleChips');
-  chips.innerHTML='';
-  const sum=Math.round(angles.reduce((s,a)=>s+a,0));
-  angles.forEach((a,i)=>{
-    const chip=document.createElement('div');
-    chip.className='a-chip';
-    chip.style.borderColor=COLORS[i]+'88';
-    chip.style.background=COLORS[i]+'0f';
-    chip.style.color=COLORS[i];
-    chip.textContent=`∠${LABELS[i]} = ${Math.round(a)}°`;
-    chips.appendChild(chip);
+  // ── Update angle cards ──
+  ['A','B','C','D'].forEach((lbl,i)=>{
+    document.getElementById('ang-'+lbl).textContent = Math.round(angles[i])+'°';
+    // Highlight the actively dragged card
+    const card = document.getElementById('card-'+lbl);
+    card.style.borderColor = dragging===i ? COLORS[i] : COLORS[i]+'40';
+    card.style.background  = dragging===i ? COLORS[i]+'14' : '#fff';
   });
-  const sc=document.getElementById('sumChip');
-  sc.textContent=`= ${sum}°`;
+
+  // ── Update sum ──
+  const sum = Math.round(angles.reduce((s,a)=>s+a, 0));
+  document.getElementById('sum-val').textContent = sum + '°';
 }
 
-// Drag logic
-const cvs=document.getElementById('cvs');
+// ══════════════════════════════════════════════
+// DRAG
+// ══════════════════════════════════════════════
 function getPos(e){
-  const r=cvs.getBoundingClientRect();
-  const PR=window.devicePixelRatio||1;
-  const s=cvs.width/(cvs.clientWidth*PR); // always 1 for our setup
-  if(e.touches) return {x:e.touches[0].clientX-r.left, y:e.touches[0].clientY-r.top};
-  return {x:e.clientX-r.left, y:e.clientY-r.top};
+  const r = document.getElementById('cvs').getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return {x: src.clientX - r.left, y: src.clientY - r.top};
 }
-cvs.addEventListener('mousedown',e=>{
-  const p=getPos(e);
-  dragging=pts.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<18);
+
+const canvas = document.getElementById('cvs');
+
+canvas.addEventListener('mousedown', e=>{
+  const p = getPos(e);
+  dragging = pts.findIndex(v=>Math.hypot(v.x-p.x, v.y-p.y) < 20);
+  if(dragging >= 0) canvas.style.cursor = 'grabbing';
 });
-cvs.addEventListener('mousemove',e=>{
-  if(dragging<0) return;
-  const p=getPos(e);
-  pts[dragging]={x:p.x,y:p.y};
+window.addEventListener('mousemove', e=>{
+  if(dragging < 0) return;
+  const p = getPos(e);
+  pts[dragging] = {x:p.x, y:p.y};
   redraw();
 });
-cvs.addEventListener('mouseup',()=>dragging=-1);
-cvs.addEventListener('touchstart',e=>{const p=getPos(e);dragging=pts.findIndex(v=>Math.hypot(v.x-p.x,v.y-p.y)<24);e.preventDefault();},{passive:false});
-cvs.addEventListener('touchmove',e=>{if(dragging<0)return;const p=getPos(e);pts[dragging]={x:p.x,y:p.y};redraw();e.preventDefault();},{passive:false});
-cvs.addEventListener('touchend',()=>dragging=-1);
+window.addEventListener('mouseup', ()=>{
+  dragging = -1;
+  canvas.style.cursor = 'crosshair';
+  redraw();
+});
+
+canvas.addEventListener('touchstart', e=>{
+  const p = getPos(e);
+  dragging = pts.findIndex(v=>Math.hypot(v.x-p.x, v.y-p.y) < 26);
+  e.preventDefault();
+},{passive:false});
+window.addEventListener('touchmove', e=>{
+  if(dragging < 0) return;
+  const p = getPos(e);
+  pts[dragging] = {x:p.x, y:p.y};
+  redraw();
+  e.preventDefault();
+},{passive:false});
+window.addEventListener('touchend', ()=>{ dragging=-1; });
+
+document.getElementById('showDiag').addEventListener('change', redraw);
+
+new ResizeObserver(()=>setPreset('rect')).observe(canvas.parentElement);
 
 setPreset('rect');
 </script>
